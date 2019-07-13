@@ -42,6 +42,14 @@ function Evolution(useOutput, maxRounds, generationsPerRun){
 
     // do some random mutations
     this.mutate();
+
+    // clear log file
+    fs.writeFile("output/main.log", '', function(err) {
+        if(err) {
+            console.log(err);
+            throw(err);
+        }
+    });
 }
 Evolution.prototype = {
     saveEvolution: function() {
@@ -128,6 +136,16 @@ Evolution.prototype = {
         // get some output
         console.log(this.round+'/'+this.maxRounds+' X Generation:', this.neat1.generation, '- average score:', Math.round(averageScore1/MAX_GENERATION), '- fittest average score: ', Math.round(fittestAverageScore1/MAX_GENERATION));
         console.log(this.round+'/'+this.maxRounds+' O Generation:', this.neat2.generation, '- average score:', Math.round(averageScore2/MAX_GENERATION), '- fittest average score: ', Math.round(fittestAverageScore2/MAX_GENERATION));
+        this.saveEvolution();
+        fs.appendFile('output/main.log',
+            this.round+'/'+this.maxRounds+' X Generation: '+ this.neat1.generation + ' - average score: '+ Math.round(averageScore1/MAX_GENERATION) + ' - fittest average score: '+ Math.round(fittestAverageScore1/MAX_GENERATION) + "\n"+
+            this.round+'/'+this.maxRounds+' O Generation: '+ this.neat2.generation + ' - average score: '+ Math.round(averageScore2/MAX_GENERATION) + ' - fittest average score: '+ Math.round(fittestAverageScore2/MAX_GENERATION) + "\n",
+            function (err) {
+                if(err) {
+                    console.log(err);
+                    throw(err);
+                }
+        });
         // reset score tracking
         averageScore1 = 0;
         fittestAverageScore1 = 0;
